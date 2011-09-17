@@ -181,9 +181,12 @@ MagnetCursor.prototype.getPositionsInline = function (elm)
 	var tailBounds = this.getBounds(this.measureNode);
 	var calcOffset = bounds.top-headBounds.top;
 	var lineHeight = bounds.bottom - tailBounds.top - calcOffset;
+	if (lineHeight<=0)
+		lineHeight = parseInt(window.getComputedStyle(elm).lineHeight.replace('px'))
 	
 	if (headBounds.top == tailBounds.top)
 	{
+		// 1 line
 		positions.push
 		({
 			left: bounds.left,
@@ -192,8 +195,9 @@ MagnetCursor.prototype.getPositionsInline = function (elm)
 			bottom: bounds.bottom
 		});
 	}
-	else if (lineHeight * 3 > bounds.height)
+	else if (lineHeight * 3 > bounds.bottom-bounds.top)
 	{
+		//2 lines
 		positions.push
 		({
 			left: headBounds.left,top: bounds.top,
@@ -203,6 +207,7 @@ MagnetCursor.prototype.getPositionsInline = function (elm)
 	}
 	else 
 	{
+		// 3 lines or more
 		positions.push ({left: headBounds.left, top: bounds.top, right: bounds.right, bottom: bounds.top + lineHeight});
 		positions.push ({left: bounds.left, top: bounds.top + lineHeight, right: bounds.right, bottom: bounds.bottom - lineHeight});
 		positions.push ({left: bounds.left, top: bounds.bottom - lineHeight, right: tailBounds.right, bottom: bounds.bottom});
