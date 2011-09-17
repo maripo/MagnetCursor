@@ -45,6 +45,18 @@ var MagnetCursor = function() {
 	this.measureNode.style.verticalAlign = 'top';
 };
 
+MagnetCursor.getImageMaps = function ()
+{
+	var imgs = document.getElementsByTagName('IMG');
+	var map = new Array();
+	for (var i=0; i<imgs.length; i++) 
+	{
+		if (imgs[i].useMap)
+			map[imgs[i].useMap.replace('#','')] = imgs[i];
+	}
+	return map;
+};
+
 MagnetCursor.KEY_CODE_COMMAND = 91;
 MagnetCursor.KEY_CODE_SHIFT = 16;
 MagnetCursor.KEY_CODE_CTRL = 17;
@@ -75,7 +87,7 @@ MagnetCursor.prototype.getEdgePositions = function (elm)
 	else if ('AREA'==elm.tagName)
 	{
 		try {
-			var parentBounds = this.getBounds(elm.parentNode.parentNode.getElementsByTagName('IMG')[0]);
+			var parentBounds = this.getBounds(this.imageMaps[elm.parentNode.name]);
 			var areaCoord = MagnetCursor.getAreaCoord(elm);
 			return [{
 				left:parentBounds.left+areaCoord[0],
@@ -112,7 +124,6 @@ MagnetCursor.getAreaCoord = function (elm)
 	case 'circle' : 
 	{
 		// circle (centerX, centerY, radius)
-		console.log("CIRCLE");
 		var centerX = coords[0];
 		var centerY = coords[1];
 		var radius = coords[2];
@@ -258,6 +269,7 @@ MagnetCursor.prototype.getMouseMoveAction = function() {
 };
 
 MagnetCursor.prototype.findElements = function() {
+	this.imageMaps = MagnetCursor.getImageMaps();
 	this.clickableElements = new Array();
 	
 	var aList = document.getElementsByTagName('A');
