@@ -72,6 +72,24 @@ MagnetCursor.prototype.getEdgePositions = function (elm)
 	{
 		return this.getPositionsInline(elm);
 	}
+	else if ('AREA'==elm.tagName)
+	{
+		try {
+			var parentBounds = this.getBounds(elm.parentNode.parentNode.getElementsByTagName('IMG')[0]);
+			var areaCoord = MagnetCursor.getAreaCoord(elm);
+			return [{
+				left:parentBounds.left+areaCoord[0],
+				top:parentBounds.top+areaCoord[1],
+				right:parentBounds.left+areaCoord[2],
+				bottom:parentBounds.top+areaCoord[3],
+			}];
+		}
+		catch (e)
+		{
+			console.log(e);
+			return [];
+		}
+	}
 	else
 	{
 		var bounds = this.getBounds(elm);
@@ -83,6 +101,54 @@ MagnetCursor.prototype.getEdgePositions = function (elm)
 			}];
 	}
 	
+};
+MagnetCursor.getAreaCoord = function (elm)
+{
+	var _coords = elm.coords.split(',');
+	var coords = new Array();
+	for (var i=0; i<_coords.length; i++) coords[i] = parseInt(_coords[i]);
+	switch (elm.shape.toLowerCase()) 
+	{
+	case 'circle' : 
+	{
+		// circle (centerX, centerY, radius)
+		console.log("CIRCLE");
+		var centerX = coords[0];
+		var centerY = coords[1];
+		var radius = coords[2];
+		return [centerX-radius, centerY-radius, centerX+radius, centerY+radius];
+		break;
+	}
+	case 'poly' : 
+	{
+		// poly (x,y,x,y,x,y.....)
+		var minX, minY, maxX, maxY;
+		for (var i=0; i<coords.length/2; i++) 
+		{
+			var x = coords[i*2];
+			var y = coords[i*2+1];
+			if (i==0) {
+				minX = x;
+				maxX = x;
+				minY = y;
+				maxY = y;
+			}
+			else {
+				if (x<minX) minX = x;
+				if (y<minY) minY = y;
+				if (x>maxX) maxX = x;
+				if (y>maxY) maxY = y;
+			}
+		}
+		return [minX, minY, maxX, maxY];
+		break;
+	}
+	default : 
+	{
+		// rect (left, top, right, bottom)
+		return coords;
+	}
+	}
 };
 MagnetCursor.prototype.getBounds = function (elm)
 {
@@ -193,12 +259,18 @@ MagnetCursor.prototype.getMouseMoveAction = function() {
 
 MagnetCursor.prototype.findElements = function() {
 	this.clickableElements = new Array();
+	
 	var aList = document.getElementsByTagName('A');
 	for ( var i = 0, l = aList.length; i < l; i++)
 		this.clickableElements.push(aList[i]);
+
 	var inputList = document.getElementsByTagName('INPUT');
 	for ( var i = 0, l = inputList.length; i < l; i++)
 		this.clickableElements.push(inputList[i]);
+
+	var areaList = document.getElementsByTagName('AREA');
+	for ( var i = 0, l = areaList.length; i < l; i++)
+		this.clickableElements.push(areaList[i]);
 
 	for ( var i = 0, l = this.clickableElements.length; i < l; i++) {
 		var elm = this.clickableElements[i];
