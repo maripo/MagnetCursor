@@ -1,0 +1,17 @@
+{
+  "name" : "MagnetCursor",
+  "version" : "1.0",
+  "options_page":"index.html",
+  "content_scripts" : [
+    {
+      "matches" : [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js" : ["src/contentscript.js"],
+      "run_at" : "document_idle",
+      "all_frames" : false
+    }
+  ],
+  "permissions" : []
+}
