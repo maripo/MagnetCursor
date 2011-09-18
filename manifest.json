@@ -2,6 +2,11 @@
   "name" : "MagnetCursor",
   "version" : "1.0",
   "options_page":"index.html",
+  "browser_action": {
+      "default_title": "MagnetCursor Preference",
+      "default_icon": "img/menu_icon.png",
+      "popup": "pref.html"
+  },
   "content_scripts" : [
     {
       "matches" : [
