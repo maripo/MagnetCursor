@@ -61,7 +61,7 @@ MagnetCursor.KEY_CODE_COMMAND = 91;
 MagnetCursor.KEY_CODE_SHIFT = 16;
 MagnetCursor.KEY_CODE_CTRL = 17;
 MagnetCursor.KEY_CODE = MagnetCursor.KEY_CODE_COMMAND;
-MagnetCursor.MAX_DISTANCE = 40;
+MagnetCursor.MAX_DISTANCE = 50;
 
 MagnetCursor.getMaxZIndex = function () 
 {
@@ -276,23 +276,23 @@ MagnetCursor.prototype.getMouseMoveAction = function() {
 MagnetCursor.prototype.findElements = function() {
 	this.imageMaps = MagnetCursor.getImageMaps();
 	this.clickableElements = new Array();
+
+	this.addClickableElements(document.getElementsByTagName('A'));
+	this.addClickableElements(document.getElementsByTagName('INPUT'));
+	this.addClickableElements(document.getElementsByTagName('AREA'));
+	this.addClickableElements(document.getElementsByTagName('TEXTAREA'));
+	this.addClickableElements(document.getElementsByTagName('BUTTON'));
+	this.addClickableElements(document.getElementsByTagName('SELECT'));
 	
-	var aList = document.getElementsByTagName('A');
-	for ( var i = 0, l = aList.length; i < l; i++)
-		this.clickableElements.push(aList[i]);
-
-	var inputList = document.getElementsByTagName('INPUT');
-	for ( var i = 0, l = inputList.length; i < l; i++)
-		this.clickableElements.push(inputList[i]);
-
-	var areaList = document.getElementsByTagName('AREA');
-	for ( var i = 0, l = areaList.length; i < l; i++)
-		this.clickableElements.push(areaList[i]);
-
 	for ( var i = 0, l = this.clickableElements.length; i < l; i++) {
 		var elm = this.clickableElements[i];
 		elm.positions = this.getEdgePositions(elm);
 	}
+};
+MagnetCursor.prototype.addClickableElements = function (elements)
+{
+	for ( var i = 0, l = elements.length; i < l; i++)
+		this.clickableElements.push(elements[i]);
 };
 MagnetCursor.prototype.getKeyDownAction = function() {
 	var self = this;
