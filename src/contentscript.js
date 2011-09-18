@@ -216,12 +216,21 @@ MagnetCursor.prototype.getPositionsInline = function (elm)
 
 }
 MagnetCursor.prototype.emulateClick = function(target) {
-	this.emulatedClickEvent = document.createEvent('MouseEvents');
 	if ('SELECT')
+	{
+		this.emulatedClickEvent = document.createEvent('MouseEvents');
 		this.emulatedClickEvent.initEvent('mousedown', false, false);
-	else
+		target.dispatchEvent(this.emulatedClickEvent);
+		this.emulatedClickEvent = document.createEvent('MouseEvents');
 		this.emulatedClickEvent.initEvent('click', false, false);
-	target.dispatchEvent(this.emulatedClickEvent);
+		target.dispatchEvent(this.emulatedClickEvent);
+	}
+	else
+	{
+		this.emulatedClickEvent = document.createEvent('MouseEvents');
+		this.emulatedClickEvent.initEvent('click', false, false);
+		target.dispatchEvent(this.emulatedClickEvent);
+	}
 };
 MagnetCursor.prototype.init = function() {
 	document.body.addEventListener('mousemove', this.getMouseMoveAction(), true);
