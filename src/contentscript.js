@@ -217,7 +217,10 @@ MagnetCursor.prototype.getPositionsInline = function (elm)
 }
 MagnetCursor.prototype.emulateClick = function(target) {
 	this.emulatedClickEvent = document.createEvent('MouseEvents');
-	this.emulatedClickEvent.initEvent('click', false, false);
+	if ('SELECT')
+		this.emulatedClickEvent.initEvent('mousedown', false, false);
+	else
+		this.emulatedClickEvent.initEvent('click', false, false);
 	target.dispatchEvent(this.emulatedClickEvent);
 };
 MagnetCursor.prototype.init = function() {
