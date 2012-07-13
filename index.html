@@ -1,1 +1,43 @@
 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<style type="text-css">
+			h1
+			{
+				font-size:normal;
+			}
+			body
+			{
+				width:400px;
+			}
+		</style>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>MagnetCursor Preference</title>
+	</head>
+	<body>
+	<h1>MagnetCursor Preference</h1>
+	<p>On/Off (TODO)</p>
+	<div>
+		<input type="radio" name="enabled" /><label>On</label>
+		/
+		<input type="radio" name="enabled" /><label>Off</label>
+
+	</div>
+	<p>Key</p>
+	<div>
+		(TODO) Ctrl / Alt(option) / Control / Shift
+	</div>
+	<p>Max Distance (TODO)</p>
+	<div>
+		<input type="range"/>
+	</div>
+	<input type="button" value="test" id="button"/>
+	<script language="javascript">
+		var elm = document.getElementById('button');
+		elm.addEventListener('mousedown', function(){console.log('mousedown')},false);
+		elm.addEventListener('mouseup', function(){console.log('mouseup')},false);
+		elm.addEventListener('click', function(){console.log('click')},false);
+	</script>
+	</body>
+</html>

@@ -216,35 +216,53 @@ MagnetCursor.prototype.getPositionsInline = function (elm)
 
 }
 MagnetCursor.prototype.emulateClick = function(target) {
-	if ('SELECT')
-	{
-		this.emulatedClickEvent = document.createEvent('MouseEvents');
-		this.emulatedClickEvent.initEvent('mousedown', false, false);
-		target.dispatchEvent(this.emulatedClickEvent);
-		this.emulatedClickEvent = document.createEvent('MouseEvents');
-		this.emulatedClickEvent.initEvent('click', false, false);
-		target.dispatchEvent(this.emulatedClickEvent);
-	}
-	else
-	{
-		this.emulatedClickEvent = document.createEvent('MouseEvents');
-		this.emulatedClickEvent.initEvent('click', false, false);
-		target.dispatchEvent(this.emulatedClickEvent);
-	}
+	this.emulatedEvent = document.createEvent('MouseEvents');
+	this.emulatedEvent.initEvent('click', false, false);
+	target.dispatchEvent(this.emulatedEvent);
+};
+MagnetCursor.prototype.emulateMousedown = function(target) {
+	this.emulatedEvent = document.createEvent('MouseEvents');
+	this.emulatedEvent.initEvent('mousedown', false, false);
+	target.dispatchEvent(this.emulatedEvent);
+};
+MagnetCursor.prototype.emulateMouseup = function(target) {
+	this.emulatedEvent = document.createEvent('MouseEvents');
+	this.emulatedEvent.initEvent('mouseup', false, false);
+	target.dispatchEvent(this.emulatedEvent);
 };
 MagnetCursor.prototype.init = function() {
 	document.body.addEventListener('mousemove', this.getMouseMoveAction(), true);
 	document.body.addEventListener('keydown', this.getKeyDownAction(), true);
 	document.body.addEventListener('keyup', this.getKeyUpAction(), true);
 	document.body.addEventListener('click', this.getClickAction(), true);
+	document.body.addEventListener('mouseup', this.getMouseupAction(), true);
+	document.body.addEventListener('mousedown', this.getMousedownAction(), true);
 };
 MagnetCursor.prototype.getClickAction = function() {
 	var self = this;
 	return function(event) {
-		if (event == self.emulatedClickEvent)
+		if (event == self.emulatedEvent)
 			return;
 		if (self.keyDown && self.targetElement)
 			self.emulateClick(self.targetElement);
+	};
+};
+MagnetCursor.prototype.getMousedownAction = function() {
+	var self = this;
+	return function(event) {
+		if (event == self.emulatedEvent)
+			return;
+		if (self.keyDown && self.targetElement)
+			self.emulateMousedown(self.targetElement);
+	};
+};
+MagnetCursor.prototype.getMouseupAction = function() {
+	var self = this;
+	return function(event) {
+		if (event == self.emulatedEvent)
+			return;
+		if (self.keyDown && self.targetElement)
+			self.emulateMouseup(self.targetElement);
 	};
 };
 
